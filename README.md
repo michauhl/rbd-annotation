@@ -44,7 +44,7 @@ Reformat the table with:
 
 ```
 python scripts/reformat_rbp2go_domain_table.py -i data/Table_selected_new_RBDs.txt -o data/rbp2go.selected_new_rbds.reform.txt
-``
+```
 
 And add one missing domain manually for better results in later parent assignment:
 
