@@ -5,6 +5,7 @@ import os
 import pandas as pd
 
 from rbd_common import (
+    get_sequence_region,
     InterproRBDInfo,
     merge_intervals,
     read_fasta_file,
@@ -49,6 +50,13 @@ def setup_argument_parser():
                    metavar='str',
                    required=True,
                    help="Output table file to store refined results")
+    p.add_argument("--out-format",
+                   dest="out_format",
+                   type=int,
+                   metavar='int',
+                   choices=[1, 2],
+                   default=1,
+                   help="Output format. 1: one row per query with summarized hits. 2: one row per RBD hit. (default: 1)")
     p.add_argument("--fasta",
                    dest="in_fasta",
                    type=str,
@@ -248,38 +256,53 @@ if __name__ == '__main__':
 
     with open(args.out_table, "w") as f:
 
-        header = ["query_id", "interpro_ids", "domain_names", "domain_counts", "hit_pos"]
-        if args.in_fasta:
-            header.append("fasta_seq")
-        f.write("\t".join(header) + "\n")
-
-        for qid in qid2pid2hit_pos_dic:
-
-            ipid2c_dic = {}
-
-            for ip_id in qid2pid2hit_pos_dic[qid]:
-                ipid2c_dic[ip_id] = len(qid2pid2hit_pos_dic[qid][ip_id])
-
-            ip_ids = []
-            short_ids = []
-            counts = []
-            for ip_id in ipid2c_dic:
-                ip_ids.append(ip_id)
-                short_ids.append(ipid2short_dic[ip_id])
-                counts.append(ipid2c_dic[ip_id])
-            ip_ids_str = ";".join(ip_ids)
-            short_ids_str = ";".join(short_ids)
-            counts_str = ";".join([str(c) for c in counts])
-
-            hit_pos_str = []
-            for ip_id in sorted(qid2pid2hit_pos_dic[qid].keys()):
-                hit_pos_str.append(f"{ip_id}:{','.join([f'{start}-{end}' for start, end in qid2pid2hit_pos_dic[qid][ip_id]])}")
-            hit_pos_str = ";".join(hit_pos_str)
-
-            out_fields = [qid, ip_ids_str, short_ids_str, counts_str, hit_pos_str]
+        if args.out_format == 1:
+            header = ["query_id", "interpro_ids", "domain_names", "domain_counts", "hit_pos"]
             if args.in_fasta:
-                out_fields.append(qid2fasta_seq.get(qid, ""))
-            f.write("\t".join(out_fields) + "\n")
+                header.append("fasta_seq")
+            f.write("\t".join(header) + "\n")
+
+            for qid in qid2pid2hit_pos_dic:
+
+                ipid2c_dic = {}
+
+                for ip_id in qid2pid2hit_pos_dic[qid]:
+                    ipid2c_dic[ip_id] = len(qid2pid2hit_pos_dic[qid][ip_id])
+
+                ip_ids = []
+                short_ids = []
+                counts = []
+                for ip_id in ipid2c_dic:
+                    ip_ids.append(ip_id)
+                    short_ids.append(ipid2short_dic[ip_id])
+                    counts.append(ipid2c_dic[ip_id])
+                ip_ids_str = ";".join(ip_ids)
+                short_ids_str = ";".join(short_ids)
+                counts_str = ";".join([str(c) for c in counts])
+
+                hit_pos_str = []
+                for ip_id in sorted(qid2pid2hit_pos_dic[qid].keys()):
+                    hit_pos_str.append(f"{ip_id}:{','.join([f'{start}-{end}' for start, end in qid2pid2hit_pos_dic[qid][ip_id]])}")
+                hit_pos_str = ";".join(hit_pos_str)
+
+                out_fields = [qid, ip_ids_str, short_ids_str, counts_str, hit_pos_str]
+                if args.in_fasta:
+                    out_fields.append(qid2fasta_seq.get(qid, ""))
+                f.write("\t".join(out_fields) + "\n")
+        elif args.out_format == 2:
+            header = ["query_id", "interpro_id", "domain_name", "hit_pos_s", "hit_pos_e"]
+            if args.in_fasta:
+                header.append("rbd_seq")
+            f.write("\t".join(header) + "\n")
+
+            for qid in qid2pid2hit_pos_dic:
+                fasta_seq = qid2fasta_seq.get(qid, "")
+                for ip_id in qid2pid2hit_pos_dic[qid]:
+                    for start, end in qid2pid2hit_pos_dic[qid][ip_id]:
+                        out_fields = [qid, ip_id, ipid2short_dic[ip_id], str(start), str(end)]
+                        if args.in_fasta:
+                            out_fields.append(get_sequence_region(fasta_seq, start, end) if fasta_seq else "")
+                        f.write("\t".join(out_fields) + "\n")
 
     print("# queries with final RBD annotations: %d" % len(qid2pid2hit_pos_dic))
     if args.in_fasta:

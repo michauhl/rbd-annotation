@@ -37,6 +37,15 @@ def read_fasta_file(fasta_file):
 
 ################################################################################
 
+def get_sequence_region(seq, start, end):
+    """
+    Return a 1-based inclusive sequence region.
+    """
+    return seq[start - 1:end]
+
+
+################################################################################
+
 def fetch_interpro_json(interpro_id,
                         base_url="https://www.ebi.ac.uk/interpro/api/entry/interpro/"):
 
@@ -205,5 +214,4 @@ class InterproRBDInfo:
 
 
 ################################################################################
-
 
