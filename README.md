@@ -55,7 +55,7 @@ echo -e "IPR047575\tDomain\tSm domain\tAdded" >> data/rbp2go.selected_new_rbds.r
 Next, get parent domain information for these:
 
 ```
-python scripts/interpro_get_parent_domain_infos.py --in data/rbp2go.test.txt --out data/rbp2go.selected_new_rbds.reform.parent_infos.txt
+python scripts/interpro_get_parent_domain_infos.py --in data/rbp2go.selected_new_rbds.reform.txt --out data/rbp2go.selected_new_rbds.reform.parent_infos.txt
 ```
 
 
