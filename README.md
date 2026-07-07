@@ -58,10 +58,27 @@ Next, get parent domain information for these:
 python scripts/interpro_get_parent_domain_infos.py --in data/rbp2go.selected_new_rbds.reform.txt --out data/rbp2go.selected_new_rbds.reform.parent_infos.txt
 ```
 
+Or use custom file (with some domains manually added, in total 1000):
+```
+python scripts/interpro_get_parent_domain_infos.py --in data/rbp2go.selected_new_rbds.reform.added.txt --out data/rbp2go.selected_new_rbds.reform.added.parent_infos.txt
+```
+
 
 ## Annotate RBDs
 
-Now let's bring it all together (InterProScan output + RBD infos) ...
+Now let's bring together the InterProScan results and the RBD domain infos we collected, to filter the InterProScan results to only keep RBD domain annotations:
+
+```
+python scripts/refine_interproscan_results_keep_rbds.py --ips-res data/test_protein_seqs.interproscan_results.out --par-infos data/rbp2go.selected_new_rbds.reform.added.parent_infos.txt --out data/test_protein_seqs.interpro_rbd_domains.txt --fasta data/test_protein_seqs.fa
+```
+
+Here InterPro IDs are resolved to parent IDs, and overlapping intervals are refined and merged in the following way:
+
+1. Filter list of start+end domain hit positions to remove intervals that are fully contained within another interval.
+2. Merge overlapping intervals, and let the new start and end positions be the minimum and maximum start and end positions of the overlapping intervals, respectively.
+
+`--fasta` leads to adding the FASTA sequence of the query ID to `--out` table file.
+
 
 
 
