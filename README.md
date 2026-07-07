@@ -77,7 +77,7 @@ Here InterPro IDs are resolved to parent IDs, and overlapping intervals are refi
 1. Filter list of start+end domain hit positions to remove intervals that are fully contained within another interval.
 2. Merge overlapping intervals, and let the new start and end positions be the minimum and maximum start and end positions of the overlapping intervals, respectively.
 
-`--fasta` leads to adding the FASTA sequence of the query ID to `--out` table file.
+`--fasta` leads to adding the FASTA sequence of the query ID to `--out` table file. Use `--out-format 2` to output each domain hit in a single row in `--out` table.
 
 
 
