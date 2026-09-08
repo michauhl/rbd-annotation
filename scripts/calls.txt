@@ -1,0 +1,7 @@
+python scripts/refine_interproscan_results_keep_rbds.py --ips-res data/all_protocols_proteins.ast_rem.add.out --par-infos data/rbp2go.selected_new_rbds.reform.added.parent_infos.txt --out data/all_protocols_proteins.interpro_rbd_domains.fmt1.tsv --fasta data/all_protocols_proteins.ast_rem.add.fa  --out-format 1
+
+python scripts/refine_interproscan_results_keep_rbds.py --ips-res data/encode_eclip_protein_seqs.out --par-infos data/rbp2go.selected_new_rbds.reform.added.parent_infos.txt --out data/encode_eclip_protein_seqs.interpro_rbd_domains.fmt1.tsv --fasta data/encode_eclip_protein_seqs.fa  --out-format 1
+
+python scripts/refine_interproscan_results_keep_rbds.py --ips-res data/encode_eclip_protein_seqs.out --par-infos data/rbp2go.selected_new_rbds.reform.added.parent_infos.txt --out data/encode_eclip_protein_seqs.interpro_rbd_domains.fmt2.tsv --fasta data/encode_eclip_protein_seqs.fa  --out-format 2
+
+
