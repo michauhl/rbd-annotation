@@ -1,5 +1,5 @@
 # rbd-annotation
-Annotate RNA Binding Domains (RBDs) in Protein Sequences
+Annotate RNA Binding Domains (RBDs) in protein sequences
 
 ## InterProScan
 
@@ -20,7 +20,7 @@ Now continue with InterProScan:
 
 ```
 tar -xvzf interproscan-5.78-109.0-64-bit.tar.gz
-mv interproscan-5.72-103.0 interproscan
+mv interproscan-5.78-109.0 interproscan
 cd interproscan/
 chmod +x interproscan.sh
 python3 setup.py -f interproscan.properties
